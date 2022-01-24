@@ -6,28 +6,24 @@ Parameters:
   VPCCIDR:
     Type: String
     Default: 10.0.0.0/16
-    AllowedPattern: >-
-      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$'
   PrivateSubnet1CIDR:
     Type: String
-    Default: 10.0.0.0/24
-    AllowedPattern: >-
-      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
+    Default: 10.0.3.0/24
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$'
   PrivateSubnet2CIDR:
     Type: String
-    Default: 10.0.1.0/24
-    AllowedPattern: >-
-      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
+    Default: 10.0.4.0/24
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$'
   PublicSubnet1CIDR:
     Type: String
-    Default: 10.0.3.0/24
-    AllowedPattern: >-
-      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
+    Default: 10.0.1.0/24
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$'
   PublicSubnet2CIDR:
     Type: String
-    Default: 10.0.4.0/24
-    AllowedPattern: >-
-      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
+    Default: 10.0.2.0/24
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$'\
+    
 Resources:
   VPC:
     Type: 'AWS::EC2::VPC'
@@ -38,9 +34,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${NamingPrefix}-vpc'
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 08877b6d-cac7-4d37-bb4d-8184b3550b59
+ 
   PrivateSubnet1:
     Type: 'AWS::EC2::Subnet'
     Properties:
@@ -53,9 +47,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${NamingPrefix}-private-subnet-1'
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: b14058c5-1df8-475e-b2e5-46d77cbd17ba
+ 
   PrivateSubnet2:
     Type: 'AWS::EC2::Subnet'
     Properties:
@@ -68,9 +60,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${NamingPrefix}-private-subnet-2'
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 8e264502-5db3-4820-8ce2-a4c9f6d80c4d
+    
   PublicSubnet1:
     Type: 'AWS::EC2::Subnet'
     Properties:
@@ -83,9 +73,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${NamingPrefix}-public-subnet-1'
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 9f88f06e-4784-4bf1-9b5e-30c23580664f
+    
   PublicSubnet2:
     Type: 'AWS::EC2::Subnet'
     Properties:
@@ -98,43 +86,33 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${NamingPrefix}-public-subnet-2'
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: ef18f1c6-7592-4f9c-a4bf-a72291858608
+    
   InternetGateway:
     Type: 'AWS::EC2::InternetGateway'
     Properties:
       Tags:
         - Key: Name
           Value: !Sub '${NamingPrefix}-igw'
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 3396ce8b-34d6-4c6f-99ac-9746ad6134d1
+    
   GatewayAttachement:
     Type: 'AWS::EC2::VPCGatewayAttachment'
     Properties:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: e77ee451-b137-4bcc-a959-ffd0f29648f1
+    
   NatGateway:
     Type: 'AWS::EC2::NatGateway'
     Properties:
       AllocationId: !GetAtt NatGatewayEIP.AllocationId
       SubnetId: !Ref PublicSubnet1
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: ba68bab2-ee04-4112-a3fa-b0208d43a963
+    
   NatGatewayEIP:
     Type: 'AWS::EC2::EIP'
     DependsOn:
       - GatewayAttachement
     Properties:
       Domain: vpc
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: b1e50d3f-a69b-4853-96ea-90578b5c23d6
+    
   PublicRouteTable:
     Type: 'AWS::EC2::RouteTable'
     Properties:
@@ -142,9 +120,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${NamingPrefix}-public-rtb'
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 6c7f4ce0-cccb-4ade-b7ff-798431d8caa2
+    
   PrivateRouteTable:
     Type: 'AWS::EC2::RouteTable'
     Properties:
@@ -152,9 +128,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${NamingPrefix}-private-rtb'
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 7b62cbb1-75d2-4aff-89f1-314bc9e76df5
+    
   PublicRoute:
     Type: 'AWS::EC2::Route'
     DependsOn: GatewayAttachement
@@ -162,38 +136,39 @@ Resources:
       RouteTableId: !Ref PublicRouteTable
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 7f3bbef0-cdf6-4414-8e15-d5a647ec1ef9
+    
   PublicRouteTableAssociation1:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
       RouteTableId: !Ref PublicRouteTable
       SubnetId: !Ref PublicSubnet1
+      
   PublicRouteTableAssociation2:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
       RouteTableId: !Ref PublicRouteTable
       SubnetId: !Ref PublicSubnet2
+      
   PrivateRouteToInternet:
     Type: 'AWS::EC2::Route'
     Properties:
       RouteTableId: !Ref PrivateRouteTable
       DestinationCidrBlock: 0.0.0.0/0
       NatGatewayId: !Ref NatGateway
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 331c1358-10b5-440c-8990-68a869609ae9
+    
   PrivateRouteTableAssociation1:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
       RouteTableId: !Ref PrivateRouteTable
       SubnetId: !Ref PrivateSubnet1
+      
   PrivateRouteTableAssociation2:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
       RouteTableId: !Ref PrivateRouteTable
       SubnetId: !Ref PrivateSubnet2
+      
+ 
 Outputs:
   VPC:
     Description: A reference to the VPC
