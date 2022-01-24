@@ -1,0 +1,77 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Provisions an internal Application Load Balancer.
+
+Parameters:
+  NamingPrefix:
+    Type: String
+
+  VPC:
+    Type: AWS::EC2::VPC::Id
+    Description: Create VPC endpoints in this VPC
+
+  PrivateSubnets:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: The private subnets in which to create the Logs and ECR VPC endpoints
+
+  LoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
+    Description: The security group to associate with the load balancer
+
+Resources:
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: !Sub "${NamingPrefix}-load-balancer"
+      Scheme: internal
+      LoadBalancerAttributes:
+        - Key: idle_timeout.timeout_seconds
+          Value: "30"
+      SecurityGroups:
+        - !Ref LoadBalancerSecurityGroup
+      Subnets: !Ref PrivateSubnets
+
+  LoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - TargetGroupArn: !Ref LoadBalancerTargetGroup
+          Type: forward
+
+  LoadBalancerTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub "${NamingPrefix}-target-group"
+      HealthCheckIntervalSeconds: 7
+      HealthCheckPath: "/"
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 6
+      HealthyThresholdCount: 2
+      TargetType: ip
+      Port: 5000
+      Protocol: HTTP
+      UnhealthyThresholdCount: 2
+      VpcId: !Ref VPC
+
+Outputs:
+  LoadBalancerDNSName:
+    Description: Load balancer DNS name
+    Value: !GetAtt LoadBalancer.DNSName
+
+  LoadBalancerFullName:
+    Description: Load balancer full name
+    Value: !GetAtt LoadBalancer.LoadBalancerFullName
+
+  LoadBalancerTargetGroupFullName:
+    Description: Load balancer target group full name
+    Value: !GetAtt LoadBalancerTargetGroup.TargetGroupFullName
+    Export:
+      Name: !Sub "${NamingPrefix}-lb-target-group-full-name"
+
+  LoadBalancerTargetGroupArn:
+    Description: Load balancer target group Arn
+    Value: !Ref LoadBalancerTargetGroup
+    Export:
+      Name: !Sub "${NamingPrefix}-lb-target-group-arn"
