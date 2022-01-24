@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Provisions an ECS service infrastructure.
+
+Parameters:
+  Environment:
+    Type: String
+
+  NamingPrefix:
+    Type: String
+    Default: "Seminar"
+
+Resources:
+  VPC:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./vpc.yaml
+      Parameters:
+        NamingPrefix: !Ref Prefix
+        VPCCIDR: 10.0.0.0/16
+        PrivateSubnet1CIDR: 10.0.3.0/24
+        PrivateSubnet2CIDR: 10.0.4.0/24
+        PublicSubnet1CIDR: 10.0.1.0/24
+        PublicSubnet2CIDR: 10.0.2.0/24
+
+  SecurityGroups:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./security-groups.yaml
+      Parameters:
+        NamingPrefix: !Ref Prefix
+        VPC: !GetAtt VPC.Outputs.VPC
+
+  LoadBalancer:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./load-balancer.yaml
+      Parameters:
+        NamingPrefix: !Ref Prefix
+        VPC: !GetAtt VPC.Outputs.VPC
+        PrivateSubnets: !GetAtt VPC.Outputs.PrivateSubnets
+        LoadBalancerSecurityGroup: !GetAtt SecurityGroups.Outputs.LoadBalancerSecurityGroup
+
+  ECR:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./ecr.yaml
+      Parameters:
+        NamingPrefix: !Ref NamingPrefix
+
+  ECS:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: 
+      - VPC
+      - LoadBalancer
+      - SecurityGroups
+    Properties:
+      TemplateURL: ./ecs.yaml
+      Parameters:
+        NamingPrefix: !Ref NamingPrefix
+        PrivateSubnets: !GetAtt VPC.Outputs.PrivateSubnets
+        ECSSecurityGroup: !GetAtt SecurityGroups.Outputs.ECSTaskSecurityGroup
+        LoadBalancer: !GetAtt LoadBalancer.Outputs.LoadBalancerFullName
+        LoadBalancerTargetGroupArn: !GetAtt LoadBalancer.Outputs.LoadBalancerTargetGroupArn
