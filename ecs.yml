@@ -16,11 +16,15 @@ Parameters:
     Type: AWS::EC2::Subnet::Id
     
   ECSSecurityGroup:
-    Type: AWS::EC2::SecurityGroup:Id
+    Type: AWS::EC2::SecurityGroup::Id
   
   ALB:
     Type: AWS::EC2::LoadBalancer
   
+  ALBTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+
+
 
 Resources:
   ECSCluster:
@@ -98,7 +102,7 @@ Resources:
           SecurityGroups:
             - !Ref ECSSecurityGroup
       LoadBalancers:
-        - ContainerName: !Ref ContainerName
-          ContainerPort: !Ref ContainerPort
-          TargetGroupArn: !Ref TargetGroup
+        - ContainerName: !GetAtt ECSTaskDefinition.ContainerDefinitions.Name
+          ContainerPort: !GetAtt ECSTaskDefinition.ContainerDefinitions.PortMappings.ContainerPort
+          TargetGroupArn: !Ref ALBTargetGroup
           LoadBalancerName: !Ref ALB
