@@ -1,11 +1,13 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Provisions the security groups required by the other stacks.
+
 Parameters:
   NamingPrefix:
     Type: String
   VPC:
     Type: 'AWS::EC2::VPC::Id'
     Description: Deploy security groups in this VPC
+    
 Resources:
   ECSTaskSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
@@ -19,9 +21,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${NamingPrefix}-ecs-task-sg'
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 626e0f6b-ab8a-43f4-971b-16284622579d
+    
   BastionSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
@@ -40,9 +40,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${NamingPrefix}-bastion-sg'
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: f41869b0-ff69-491d-8740-db8271d56af8
+    
   LoadBalancerSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
@@ -55,18 +53,18 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${NamingPrefix}-load-balancer-sg'
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 8484f1f1-e049-44d5-94e6-34834d65dafe
+    
 Outputs:
   ECSTaskSecurityGroup:
     Description: A reference to the ECS task security group ID
     Value: !Ref ECSTaskSecurityGroup
     Export:
       Name: !Sub '${NamingPrefix}-ecs-task-sg'
+      
   BastionSecurityGroup:
     Description: A reference to the bastion security group ID
     Value: !Ref BastionSecurityGroup
+    
   LoadBalancerSecurityGroup:
     Description: A reference to the load balancer security group ID
     Value: !Ref LoadBalancerSecurityGroup
