@@ -9,19 +9,17 @@ Parameters:
     Type: String
     Default: 219308536655.dkr.ecr.us-east-1.amazonaws.com/flask-app
     
-  PrivateSubnet1:
-    Type: AWS::EC2::Subnet::Id
-   
-  PrivateSubnet2:
-    Type: AWS::EC2::Subnet::Id
+  PrivateSubnets:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: The private subnets list
     
   ECSSecurityGroup:
     Type: AWS::EC2::SecurityGroup::Id
   
-  ALB:
-    Type: AWS::EC2::LoadBalancer
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
   
-  ALBTargetGroup:
+  LoadBalancerTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
 
 
@@ -96,13 +94,11 @@ Resources:
       NetworkConfiguration: 
         AwsvpcConfiguration:
           #AssignPublicIp: DISABLED
-          Subnets:
-            - !Ref PrivateSubnet1
-            - !Ref PrivateSubnet2
+          Subnets: !Ref PrivateSubnets
           SecurityGroups:
             - !Ref ECSSecurityGroup
       LoadBalancers:
         - ContainerName: !GetAtt ECSTaskDefinition.ContainerDefinitions.Name
           ContainerPort: !GetAtt ECSTaskDefinition.ContainerDefinitions.PortMappings.ContainerPort
-          TargetGroupArn: !Ref ALBTargetGroup
-          LoadBalancerName: !Ref ALB
+          TargetGroupArn: !Ref LoadBalancerTargetGroup
+          LoadBalancerName: !Ref LoadBalancer
