@@ -1,0 +1,85 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Provisions an ECS service infrastructure.
+Parameters:
+  Environment:
+    Type: String
+  NamingPrefix:
+    Type: String
+    Default: Seminar
+Resources:
+  VPC:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/seminar-cf-templates/91a88bb955419389c4c9b8161ba63e8a.template
+      Parameters:
+        NamingPrefix:
+          Ref: NamingPrefix
+        VPCCIDR: 10.0.0.0/16
+        PrivateSubnet1CIDR: 10.0.3.0/24
+        PrivateSubnet2CIDR: 10.0.4.0/24
+        PublicSubnet1CIDR: 10.0.1.0/24
+        PublicSubnet2CIDR: 10.0.2.0/24
+  SecurityGroups:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/seminar-cf-templates/88df756e1aedd30784898fa9b55ff0a0.template
+      Parameters:
+        NamingPrefix:
+          Ref: NamingPrefix
+        VPC:
+          Fn::GetAtt:
+          - VPC
+          - Outputs.VPC
+  LoadBalancer:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/seminar-cf-templates/20588676679c9b059677e5cffada2cdf.template
+      Parameters:
+        NamingPrefix:
+          Ref: NamingPrefix
+        VPC:
+          Fn::GetAtt:
+          - VPC
+          - Outputs.VPC
+        PrivateSubnets:
+          Fn::GetAtt:
+          - VPC
+          - Outputs.PrivateSubnets
+        LoadBalancerSecurityGroup:
+          Fn::GetAtt:
+          - SecurityGroups
+          - Outputs.LoadBalancerSecurityGroup
+  ECR:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/seminar-cf-templates/49cef9b86be1a05367211f470a9deddb.template
+      Parameters:
+        NamingPrefix:
+          Ref: NamingPrefix
+  ECS:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+    - VPC
+    - LoadBalancer
+    - SecurityGroups
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/seminar-cf-templates/178670889bb808f61b87401b36e5a8b4.template
+      Parameters:
+        NamingPrefix:
+          Ref: NamingPrefix
+        PrivateSubnets:
+          Fn::GetAtt:
+          - VPC
+          - Outputs.PrivateSubnets
+        ECSSecurityGroup:
+          Fn::GetAtt:
+          - SecurityGroups
+          - Outputs.ECSTaskSecurityGroup
+        LoadBalancer:
+          Fn::GetAtt:
+          - LoadBalancer
+          - Outputs.LoadBalancerFullName
+        LoadBalancerTargetGroupArn:
+          Fn::GetAtt:
+          - LoadBalancer
+          - Outputs.LoadBalancerTargetGroupArn

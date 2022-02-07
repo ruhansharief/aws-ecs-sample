@@ -17,10 +17,10 @@ Parameters:
     Type: AWS::EC2::SecurityGroup::Id
   
   LoadBalancer:
-    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Type: String
   
   LoadBalancerTargetGroupArn:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Type: String
 
 
 
@@ -98,7 +98,6 @@ Resources:
           SecurityGroups:
             - !Ref ECSSecurityGroup
       LoadBalancers:
-        - ContainerName: !GetAtt ECSTaskDefinition.ContainerDefinitions.Name
-          ContainerPort: !GetAtt ECSTaskDefinition.ContainerDefinitions.PortMappings.ContainerPort
+        - ContainerName: "flask-container"
+          ContainerPort: 5000
           TargetGroupArn: !Ref LoadBalancerTargetGroupArn
-          LoadBalancerName: !Ref LoadBalancer
