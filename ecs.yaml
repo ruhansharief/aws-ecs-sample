@@ -19,7 +19,7 @@ Parameters:
   LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
   
-  LoadBalancerTargetGroup:
+  LoadBalancerTargetGroupArn:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
 
 
@@ -100,5 +100,5 @@ Resources:
       LoadBalancers:
         - ContainerName: !GetAtt ECSTaskDefinition.ContainerDefinitions.Name
           ContainerPort: !GetAtt ECSTaskDefinition.ContainerDefinitions.PortMappings.ContainerPort
-          TargetGroupArn: !Ref LoadBalancerTargetGroup
+          TargetGroupArn: !Ref LoadBalancerTargetGroupArn
           LoadBalancerName: !Ref LoadBalancer
