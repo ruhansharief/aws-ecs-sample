@@ -33,7 +33,7 @@ Resources:
   LoadBalancer:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.amazonaws.com/seminar-cf-templates/ee32b913cec67cecf16b734f45ef0a17.template
+      TemplateURL: https://s3.amazonaws.com/seminar-cf-templates/2a2b12396e771d9d9ff771c7c8a3245d.template
       Parameters:
         NamingPrefix:
           Ref: NamingPrefix

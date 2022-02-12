@@ -22,7 +22,6 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       Name: !Sub "${NamingPrefix}-load-balancer"
-      Scheme: internal
       LoadBalancerAttributes:
         - Key: idle_timeout.timeout_seconds
           Value: "30"
