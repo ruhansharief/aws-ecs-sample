@@ -9,9 +9,9 @@ Parameters:
     Type: AWS::EC2::VPC::Id
     Description: Create VPC endpoints in this VPC
 
-  PrivateSubnets:
+  PublicSubnets:
     Type: List<AWS::EC2::Subnet::Id>
-    Description: The private subnets in which to create the Logs and ECR VPC endpoints
+    Description: The public subnets in which to create the Logs and ECR VPC endpoints
 
   LoadBalancerSecurityGroup:
     Type: AWS::EC2::SecurityGroup::Id
@@ -28,7 +28,7 @@ Resources:
           Value: "30"
       SecurityGroups:
         - !Ref LoadBalancerSecurityGroup
-      Subnets: !Ref PrivateSubnets
+      Subnets: !Ref PublicSubnets
 
   LoadBalancerListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -50,7 +50,7 @@ Resources:
       HealthCheckTimeoutSeconds: 6
       HealthyThresholdCount: 2
       TargetType: ip
-      Port: 5000
+      Port: 80
       Protocol: HTTP
       UnhealthyThresholdCount: 2
       VpcId: !Ref VPC

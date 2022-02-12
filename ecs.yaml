@@ -78,7 +78,12 @@ Resources:
           PortMappings:
             - ContainerPort: 5000
               Protocol: tcp  
-              
+          # logConfiguration:
+          #   logDriver: awslogs
+          #   options:
+          #     awslogs-group: !Sub "${NamingPrefix}-ecs-logs"
+          #     awslogs-region: !Sub "${AWS::Region}"
+          #     awslogs-stream-prefix: "ecs"
   ECSService:
     Type: AWS::ECS::Service
     Properties: 
@@ -86,9 +91,9 @@ Resources:
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref ECSTaskDefinition
       DeploymentConfiguration:
-        MinimumHealthyPercent: 100
+        MinimumHealthyPercent: 0
         MaximumPercent: 200
-      DesiredCount: 4
+      DesiredCount: 2
       HealthCheckGracePeriodSeconds: 30
       LaunchType: FARGATE
       NetworkConfiguration: 

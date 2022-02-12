@@ -37,7 +37,7 @@ Resources:
       Parameters:
         NamingPrefix: !Ref NamingPrefix
         VPC: !GetAtt VPC.Outputs.VPC
-        PrivateSubnets: !GetAtt VPC.Outputs.PrivateSubnets
+        PublicSubnets: !GetAtt VPC.Outputs.PublicSubnets
         LoadBalancerSecurityGroup: !GetAtt SecurityGroups.Outputs.LoadBalancerSecurityGroup
 
   ECR:

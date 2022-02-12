@@ -10,7 +10,7 @@ Resources:
   VPC:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.amazonaws.com/seminar-cf-templates/91a88bb955419389c4c9b8161ba63e8a.template
+      TemplateURL: https://s3.amazonaws.com/seminar-cf-templates/251f7649ec0637c8152311387126541b.template
       Parameters:
         NamingPrefix:
           Ref: NamingPrefix
@@ -22,7 +22,7 @@ Resources:
   SecurityGroups:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.amazonaws.com/seminar-cf-templates/88df756e1aedd30784898fa9b55ff0a0.template
+      TemplateURL: https://s3.amazonaws.com/seminar-cf-templates/38a96aaba94a3491576757c421fd4585.template
       Parameters:
         NamingPrefix:
           Ref: NamingPrefix
@@ -33,7 +33,7 @@ Resources:
   LoadBalancer:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.amazonaws.com/seminar-cf-templates/20588676679c9b059677e5cffada2cdf.template
+      TemplateURL: https://s3.amazonaws.com/seminar-cf-templates/ee32b913cec67cecf16b734f45ef0a17.template
       Parameters:
         NamingPrefix:
           Ref: NamingPrefix
@@ -41,10 +41,10 @@ Resources:
           Fn::GetAtt:
           - VPC
           - Outputs.VPC
-        PrivateSubnets:
+        PublicSubnets:
           Fn::GetAtt:
           - VPC
-          - Outputs.PrivateSubnets
+          - Outputs.PublicSubnets
         LoadBalancerSecurityGroup:
           Fn::GetAtt:
           - SecurityGroups
@@ -63,7 +63,7 @@ Resources:
     - LoadBalancer
     - SecurityGroups
     Properties:
-      TemplateURL: https://s3.amazonaws.com/seminar-cf-templates/178670889bb808f61b87401b36e5a8b4.template
+      TemplateURL: https://s3.amazonaws.com/seminar-cf-templates/94370d92a56d8db55644f4b71aa8ea3e.template
       Parameters:
         NamingPrefix:
           Ref: NamingPrefix
